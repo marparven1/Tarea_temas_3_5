@@ -1,0 +1,85 @@
+---
+title: "Tarea sobre los Temas 3 a 5"
+subtitle: "Grado en Estadística. Universidad de Sevilla"
+author: "Marta Venegas Pardo"
+output:
+  pdf_document: 
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+  html_document:
+    theme: united
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Pregunta 1 
+
+En el dataset datasets::precip se recoge la cantidad media de precipitaciones de
+70 ciudades de Estados Unidos (unidad = inches).
+
+## Realizar una estimación no paramétrica de la función de densidad por el método del núcleo.
+
+## Realizar una estimación no paramétrica de la función de densidad por el método de los logsplines.
+
+## Estimar P[precip>42] y el cuantil 0.90.
+
+
+
+# Pregunta 2
+
+Cuando cierta empresa recibe una invitación para optar a un contrato, la oferta no se puede completar hasta que sea revisada por cuatro departamentos: Ingeniería, Personal, Legal y Contabilidad. Los departamentos empiezan a trabajar al mismo tiempo, pero lo hacen de forma independiente. El tiempo en semanas que emplean en completar la revisión es una variable aleatoria con las siguientes distribuciones. Ingeniería: Exponencial con media 3 semanas; Personal: Normal con media 4 y desviación típica 1; Legal: 2 o 4 semanas, siendo ambos valores equiprobables; Contabilidad: Uniforme continua en el intervalo (1,5). Se trata de simular el tiempo W que tarda la empresa en preparar una oferta. Para ello se pueden implementar los siguientes pasos:
+
+## Fijar M (número de ofertas, se recomienda al menos 1000).
+
+## Definir una matriz Mx4 donde se irán almacenando los valores generados.
+
+## Repetir M veces:
+
+* Generar de forma independiente los cuatro tiempos según las cuatro distribuciones.
+
+* Guardar esos cuatro tiempos en una fila de la matriz.
+
+* Calcular W como el máximo de los cuatro tiempos.
+
+Se pide:
+
+* Estudiar gráficamente la distribución de la variable aleatoria W “tiempo que transcurre hasta completar la oferta”. Estimar su media y su mediana.
+
+* Estimar la probabilidad de que W supere las 6 semanas.
+
+* ¿Cuál es el departamento que suele tardar más en completar la revisión?
+
+* ¿Cuál es la ordenación más frecuente de los cuatro tiempos?
+
+# Pregunta 3
+
+
+
+Generar aleatoriamente un conjunto de datos donde tengo sentido construir un modelo de clasificación o de predicción. Ajustar el modelo y estimar su capacidad de generalización mediante Jackknife y mediante Validación Cruzada (K=10).
+
+
+
+# Pregunta 4
+
+Bootstrap. Implementar una función que calcule el estadístico de Fisher de comparación de coeficientes de correlación lineal:
+
+\[ T = \dfrac{Z_1 - Z_2}{\sqrt{\frac{1}{n_1 - 3}+\frac{1}{n_2 - 3}}}\]
+
+Donde: 
+
+- Z1 y Z2 representan la transformación de Fisher de los respectivos coeficientes de correlación lineal para dos grupos
+- n1 y n2 son las frecuencias absolutas respectivas de los grupos.
+
+Sobre un conjunto de datos apropiado (que puede ser generado), utilizando el anterior estadístico, realizar e interpretar un test bootstrap bilateral de comparación de los coeficientes de correlación lineal (B=1999).
+
+
+
+
+
