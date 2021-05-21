@@ -3,32 +3,125 @@ title: "Tarea sobre los Temas 3 a 5"
 subtitle: "Grado en Estadística. Universidad de Sevilla"
 author: "Marta Venegas Pardo"
 output:
-  pdf_document: 
-    fig_caption: yes
-    number_sections: yes
-    toc: yes
-    toc_depth: 2
   html_document:
     theme: united
     toc: yes
     toc_depth: 2
     number_sections: yes
+  pdf_document: 
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(kableExtra)
 ```
 
 # Pregunta 1 
 
-En el dataset datasets::precip se recoge la cantidad media de precipitaciones de
-70 ciudades de Estados Unidos (unidad = inches).
+En el dataset datasets::precip se recoge la cantidad media de precipitaciones de 70 ciudades de Estados Unidos (unidad = inches).
+
+Extraigo los datos 
+
+```{r}
+precip<-datasets::precip
+# View(precip)
+```
+
+
+
+
+
+```{r}
+#dotchart(precip[order(precip)], main = "precip data")
+#title(sub = "Average annual precipitation (in.)")
+```
+
+```{r}
+precip_data<-as.data.frame(precip)
+names<-names(precip)
+precipdf<-cbind.data.frame(names,precip_data)
+colnames(precipdf)<-c("City","Precip")
+
+
+
+cbind.data.frame(precipdf[1:35,],precipdf[36:70,])%>% 
+  kable(booktabs=TRUE,longtable=TRUE) %>% 
+  kable_styling(latex_options = c("striped","scale_down")) %>% 
+  footnote(general = "Annual Precipitation in US Cities")
+```
+
 
 ## Realizar una estimación no paramétrica de la función de densidad por el método del núcleo.
 
+```{r}
+x=precipdf[,2]
+hist(precipdf[,2], br=10,prob=TRUE, main="Precipitación",
+     col="gray",
+     xlab="Precipitaciones (litros)", ylab="Densidad estimada", 
+     ylim = c(0,0.05),xlim = c(0,70))
+lines(density(x, bw="SJ"),lwd=2,col="red") 
+rug(x)
+```
+
+
 ## Realizar una estimación no paramétrica de la función de densidad por el método de los logsplines.
 
+```{r}
+library(logspline)
+ajuste <- logspline(precip_data) 
+ajuste # 7nudos, criterio BIC
+```
+Vamos a comprobar los valores AIC
+
+```{r}
+resul<- ajuste$logl
+nudos<- resul[,1]
+logL<- resul[,3]
+AIC<- -2*logL+log(length(precip_data))*(nudos-1)
+AIC
+```
+
+
+Lo dibujamos 
+```{r}
+plot(nudos,AIC,type="l")
+```
+
+Ahora el histograma 
+```{r}
+hist(x,br=30, prob=TRUE,
+     main="Histograma y estimac. de la densidad",
+     ylab = expression(hat(f)(x)),
+     xlab="x")
+
+lines(density(precipdf[,2],bw="SJ"),col="blue",lwd=2) 
+
+plot(ajuste,col="red",lwd=2,add=TRUE)
+
+legend("topright",
+       col=c("blue","red"),
+       lwd=2,
+       legend=c("KERNEL","Logspline"))
+```
+
+
 ## Estimar P[precip>42] y el cuantil 0.90.
+
+
+```{r}
+1-plogspline(42, ajuste)
+```
+
+```{r}
+qlogspline(0.9, ajuste)
+```
+
+
 
 
 
