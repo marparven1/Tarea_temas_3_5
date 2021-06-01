@@ -21,7 +21,7 @@ library(dplyr)
 library(kableExtra)
 ```
 
-# Pregunta 1 
+# Pregunta 1 (datasets::precip)
 
 En el dataset datasets::precip se recoge la cantidad media de precipitaciones de 70 ciudades de Estados Unidos (unidad = inches).
 
@@ -68,8 +68,12 @@ lines(density(x, bw="SJ"),lwd=2,col="red")
 rug(x)
 ```
 
+Hemos elegidio el método SJ, que implementa la propuesta de Sheather y Jones, basado en la estimación del núcleo de $f^{''}$
+
 
 ## Realizar una estimación no paramétrica de la función de densidad por el método de los logsplines.
+
+Estima el logaritmo de la función de densidad mediante un spline cúbico.
 
 ```{r}
 library(logspline)
@@ -120,6 +124,8 @@ legend("topright",
 ```{r}
 qlogspline(0.9, ajuste)
 ```
+
+
 
 
 
