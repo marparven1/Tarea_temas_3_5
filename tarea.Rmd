@@ -3,16 +3,16 @@ title: "Tarea sobre los Temas 3 a 5"
 subtitle: "Grado en Estadística. Universidad de Sevilla"
 author: "Marta Venegas Pardo"
 output:
-  html_document:
-    theme: united
-    toc: yes
-    toc_depth: 2
-    number_sections: yes
   pdf_document: 
     fig_caption: yes
     number_sections: yes
     toc: yes
     toc_depth: 2
+  html_document:
+    theme: united
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -198,7 +198,12 @@ Se pide:
 transcurre hasta completar la oferta”.
 
 ```{r}
-plot(W)
+hist(W,
+     br=30,
+     prob=TRUE,
+     main="Histograma y estimación de la densidad",
+     ylab=expression(hat(f)(x)),xlab="x")
+lines(density(W,bw="SJ"),col="blue",lwd=2)
 ```
 
 
@@ -332,8 +337,6 @@ prediJ[i]<-predict(modelo.i,dataSet[i,])
 
 resi_J=dataSet$C - prediJ
 ```
-
-
 
 
 
