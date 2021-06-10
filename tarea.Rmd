@@ -34,8 +34,6 @@ precip<-datasets::precip
 
 
 
-
-
 ```{r}
 #dotchart(precip[order(precip)], main = "precip data")
 #title(sub = "Average annual precipitation (in.)")
@@ -133,35 +131,218 @@ qlogspline(0.9, ajuste)
 
 # Pregunta 2
 
-Cuando cierta empresa recibe una invitación para optar a un contrato, la oferta no se puede completar hasta que sea revisada por cuatro departamentos: Ingeniería, Personal, Legal y Contabilidad. Los departamentos empiezan a trabajar al mismo tiempo, pero lo hacen de forma independiente. El tiempo en semanas que emplean en completar la revisión es una variable aleatoria con las siguientes distribuciones. Ingeniería: Exponencial con media 3 semanas; Personal: Normal con media 4 y desviación típica 1; Legal: 2 o 4 semanas, siendo ambos valores equiprobables; Contabilidad: Uniforme continua en el intervalo (1,5). Se trata de simular el tiempo W que tarda la empresa en preparar una oferta. Para ello se pueden implementar los siguientes pasos:
+Cuando cierta empresa recibe una invitación para optar a un contrato, la oferta no se puede completar hasta que sea revisada por cuatro departamentos: Ingeniería, Personal, Legal y Contabilidad. Los departamentos empiezan a trabajar al mismo tiempo, pero lo hacen de forma independiente. El tiempo en semanas que emplean en completar la revisión es una variable aleatoria con las siguientes distribuciones:
+
+- Ingeniería: Exponencial con media 3 semanas
+- Personal: Normal con media 4 y desviación típica 1;
+- Legal: 2 o 4 semanas, siendo ambos valores equiprobables
+- Contabilidad: Uniforme continua en el intervalo (1,5). 
+
+Se trata de simular el tiempo W que tarda la empresa en preparar una oferta.
+Para ello se pueden implementar los siguientes pasos:
 
 ## Fijar M (número de ofertas, se recomienda al menos 1000).
 
+
+```{r}
+M=1000 # número de ofertas
+```
+
 ## Definir una matriz Mx4 donde se irán almacenando los valores generados.
+
+```{r}
+matriz=matrix(NA,M,4) # Posteriormente almacenaremos los datos
+dim(matriz)
+```
+
 
 ## Repetir M veces:
 
-* Generar de forma independiente los cuatro tiempos según las cuatro distribuciones.
+### Generar de forma independiente los cuatro tiempos según las cuatro distribuciones.
 
-* Guardar esos cuatro tiempos en una fila de la matriz.
 
-* Calcular W como el máximo de los cuatro tiempos.
+
+```{r}
+W = rep(NA,M)
+for (i in 1:M) { # Guardar esos cuatro tiempos en una fila de la matriz
+  vIng = rexp(1,1/3)
+  VPer = rnorm(1,4,1)
+  x=c(2,4)
+  vLeg = sample(x,1,replace = T)
+  vCon = runif(1,1,5)
+  
+
+# Para cada i genero un valor de W
+  W[i] = max(vIng,VPer,vLeg,vCon) #Calcular W como el máximo de los cuatro tiempos.
+}
+# Al final tendrás una m.a.s. de valores W de tamaño M: W_1, ..., W_M
+```
+
+
+
+Creo la matriz
+
+```{r}
+m= matrix(W,ncol = 4)
+colnames(m)<- c("Ingeniería","Personal","Legal","Contabilidad")
+head(m)
+```
+
+
+
+
 
 Se pide:
 
-* Estudiar gráficamente la distribución de la variable aleatoria W “tiempo que transcurre hasta completar la oferta”. Estimar su media y su mediana.
+* Estudiar gráficamente la distribución de la variable aleatoria W “tiempo que
+transcurre hasta completar la oferta”.
 
-* Estimar la probabilidad de que W supere las 6 semanas.
+```{r}
+plot(W)
+```
 
-* ¿Cuál es el departamento que suele tardar más en completar la revisión?
 
-* ¿Cuál es la ordenación más frecuente de los cuatro tiempos?
+
+Estimar su media y su mediana.
+
+
+```{r}
+apply(X=m,FUN=median,MARGIN = 2) # Mediana por columnas
+```
+
+
+```{r}
+apply(X=m,FUN=mean,MARGIN = 2) # Media por columnas
+```
+
+Para los datos totales, sin hacerlo por departamento:
+
+Estimación del tiempo medio
+
+```{r}
+mean(W)
+```
+
+Estimación de la mediana:
+
+```{r}
+median(W)
+```
+
+
+
+### Estimar la probabilidad de que W supere las 6 semanas.
+
+\[P[W>6]\]
+
+```{r}
+ajuste<- logspline(m) 
+ajuste
+```
+
+Luego, la probabilidad será:
+
+```{r}
+1-plogspline(6, ajuste)
+```
+
+
+
+
+### ¿Cuál es el departamento que suele tardar más en completar la revisión?
+
+
+```{r}
+m %>% 
+  colSums()/M 
+  
+```
+
+El tiempo medio de cada departamento, por tanto, vemos que el departamento de personal es el que es más lento a la hora de hacer una revisión completa.
+
+### ¿Cuál es la ordenación más frecuente de los cuatro tiempos?
+
+```{r}
+library(modeest)
+
+apply(X=m,FUN=mfv,MARGIN = 2)
+```
+
+
+
+
+```{r}
+mfv(W)
+```
+
+
+
+4 unidades de tiempo (horas)
 
 # Pregunta 3
 
+Generar aleatoriamente un conjunto de datos donde tengo sentido construir un modelo de clasificación o de predicción.
+Ajustar el modelo y estimar su capacidad de generalización mediante Jackknife y mediante Validación Cruzada (K=10).
 
 
-Generar aleatoriamente un conjunto de datos donde tengo sentido construir un modelo de clasificación o de predicción. Ajustar el modelo y estimar su capacidad de generalización mediante Jackknife y mediante Validación Cruzada (K=10).
+## Generamos los datos con la función sample(aleatoriamente).
+
+Generaremos un dataset con 120 filas y 6 variables, por ejemplo.
+
+```{r}
+V1=sample(c(1900:2021), size = 120,replace = TRUE)
+V2=runif(120,5,13)
+V3=sample(c(14:70), size = 120,replace = TRUE)
+V4=runif(120,5,13)
+V5=runif(120,0,1)
+V6=sample(c(2:220), size = 120,replace = TRUE)
+
+variables=c("A","B","C","D","E","F")
+dataSet=cbind.data.frame(V1,V2,V3,V4,V5,V6)
+
+colnames(dataSet)<-variables
+head(dataSet)
+```
+
+```{r}
+summary(dataSet)
+```
+
+
+## Modelo
+
+Elegimos como variable respuesta la variable C
+
+```{r}
+modelo=lm(C~.,data=dataSet) 
+summary(modelo)
+```
+
+
+## Estimaciones JACKKNIFE
+
+
+```{r}
+n=nrow(dataSet)
+prediJ = numeric(n)
+for(i in 1:n){
+modelo.i = lm(C~.,data=dataSet[-i,]) 
+prediJ[i]<-predict(modelo.i,dataSet[i,])
+}
+
+resi_J=dataSet$C - prediJ
+```
+
+
+
+
+
+
+```{r}
+(RMSE_J<-sqrt( mean(resi_J^2) ))
+```
+
+
 
 
 
@@ -177,6 +358,13 @@ Donde:
 - n1 y n2 son las frecuencias absolutas respectivas de los grupos.
 
 Sobre un conjunto de datos apropiado (que puede ser generado), utilizando el anterior estadístico, realizar e interpretar un test bootstrap bilateral de comparación de los coeficientes de correlación lineal (B=1999).
+
+
+
+
+
+
+
 
 
 
