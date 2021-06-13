@@ -3,11 +3,6 @@ title: "Tarea sobre los Temas 3 a 5"
 subtitle: "Grado en Estadística. Universidad de Sevilla"
 author: "Marta Venegas Pardo"
 output:
-  html_document:
-    theme: united
-    toc: yes
-    toc_depth: 2
-    number_sections: yes
   pdf_document: 
     fig_caption: yes
     number_sections: yes
@@ -16,10 +11,17 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set( eval=FALSE)
+```
+
+
+```{r  include=FALSE}
 library(dplyr)
 library(kableExtra)
 ```
+
+
+
 
 # Pregunta 1 (datasets::precip)
 
